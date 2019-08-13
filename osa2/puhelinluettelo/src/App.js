@@ -1,39 +1,52 @@
 import React, { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import Contacts from './components/contacts';
-import axios from 'axios'
+import contactService from './services/contactService'
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-  ]) 
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
-  }, [])
-  console.log('render', persons.length, 'contacts')
+    contactService.getAll().then(contact => {
+      setPersons(contact)
+      console.log(contact)
+    });
+  }, []);
 
+  const deleteContact = (id) => {
+    let person = persons.find(person => person.id === id)
+    let deleteContact = window.confirm("Delete" + person.name + "?")
+    if(deleteContact === true){
+    contactService.deleteContact(id).then(returned => {
+      setPersons(persons.filter(contact => contact.id !== id))
+    })
+  }
+  }
 
   const addContact = (event) => {
     event.preventDefault()
-    const contactObject = {
+    let person = persons.find(person => person.name === newName)
+    if(person !== undefined) {
+      let updateContact = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      
+      if(updateContact === true) {
+        const changedContact = { ...person, number: newNumber}
+        contactService.update(person.id, changedContact).then(returned => {
+          setPersons(persons.map(person => person.id !== returned.id ? person : returned))
+        })
+      setNewName('')
+      setNewNumber('')
+      return
+    }
+  }    
+  const contactObject = {
       name: newName,
       number: newNumber
     }
-    var found = persons.find(person => person.name === newName)
-    if(found) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      return
-    }
+    contactService.create(contactObject).then(returned => {setPersons(persons.concat(returned))});
     setPersons(persons.concat(contactObject))
     setNewName('')
     setNewNumber('')
@@ -65,7 +78,7 @@ const App = () => {
           onChange={handleContactChange} />
           </div>
           <div>
-          number: 
+          number:  
           <input
           value={newNumber}
           onChange={handleNumberChange} /><button type="submit">add</button>
@@ -75,7 +88,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-          <Contacts persons={persons} filter={newFilter}/>
+          <Contacts persons={persons} filter={newFilter} deleteContact={deleteContact}/>
         </div>
     </div>
   )

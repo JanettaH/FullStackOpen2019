@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import Contacts from './components/contacts';
 import contactService from './services/contactService'
+import Notification from './components/notification'
+import './index.css'
+import ErrorNotification from './components/errorNotification';
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter ] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+
 
   useEffect(() => {
     contactService.getAll().then(contact => {
@@ -22,6 +28,10 @@ const App = () => {
     if(deleteContact === true){
     contactService.deleteContact(id).then(returned => {
       setPersons(persons.filter(contact => contact.id !== id))
+      setMessage("Deleted " + person.name)
+      setTimeout(() => {
+        setMessage(null);
+      }, 4000);
     })
   }
   }
@@ -31,23 +41,36 @@ const App = () => {
     let person = persons.find(person => person.name === newName)
     if(person !== undefined) {
       let updateContact = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
-      
       if(updateContact === true) {
         const changedContact = { ...person, number: newNumber}
         contactService.update(person.id, changedContact).then(returned => {
           setPersons(persons.map(person => person.id !== returned.id ? person : returned))
-        })
+          setMessage('Updated ' + changedContact.name)
+          setTimeout(() => {
+            setMessage(null);
+          }, 4000);
+        }).catch(error => {
+          setErrorMessage('Information of ' + changedContact.name + ' has already been remoced from server')
+           setTimeout(() => {
+          setErrorMessage(null);
+        }, 4000);
+      });
+    }
       setNewName('')
       setNewNumber('')
       return
     }
-  }    
+   
   const contactObject = {
       name: newName,
       number: newNumber
     }
     contactService.create(contactObject).then(returned => {setPersons(persons.concat(returned))});
     setPersons(persons.concat(contactObject))
+    setMessage('Created ' + contactObject.name)
+    setTimeout(() => {
+      setMessage(null);
+    }, 4000);
     setNewName('')
     setNewNumber('')
     }
@@ -69,6 +92,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
+      <ErrorNotification message={errorMessage}/>
       <Filter filter={filter}/>
       <form onSubmit={addContact}>
         <div>

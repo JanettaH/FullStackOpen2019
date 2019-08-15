@@ -50,7 +50,7 @@ const App = () => {
             setMessage(null);
           }, 4000);
         }).catch(error => {
-          setErrorMessage('Information of ' + changedContact.name + ' has already been remoced from server')
+          setErrorMessage('Information of ' + changedContact.name + ' has already been removed from server')
            setTimeout(() => {
           setErrorMessage(null);
         }, 4000);

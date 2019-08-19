@@ -5,6 +5,7 @@ import contactService from './services/contactService'
 import Notification from './components/notification'
 import './index.css'
 import ErrorNotification from './components/errorNotification';
+import validateService from './services/validateService'
 
 const App = () => {
   const [ persons, setPersons] = useState([]) 
@@ -38,6 +39,13 @@ const App = () => {
 
   const addContact = (event) => {
     event.preventDefault()
+    if(!validateService.validatePerseon(newName, newNumber)) {
+      setErrorMessage("Please fill out all required fields")
+        setTimeout(() => {
+        setErrorMessage(null);
+      }, 4000);
+      return;
+    }
     let person = persons.find(person => person.name === newName)
     if(person !== undefined) {
       let updateContact = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
@@ -65,16 +73,23 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    contactService.create(contactObject).then(returned => {setPersons(persons.concat(returned))});
-    setPersons(persons.concat(contactObject))
-    setMessage('Created ' + contactObject.name)
+    contactService.create(contactObject).then(returned => {
+    setPersons(persons.concat(returned))
+    setMessage('Created ' + returned.name)
     setTimeout(() => {
-      setMessage(null);
-    }, 4000);
+      setMessage(null)
+    }, 4000)
+  })
+    .catch(error => {
+      setErrorMessage(error.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 4000)
+    })
     setNewName('')
     setNewNumber('')
-    }
-
+  }
+    
 
     const handleContactChange = (event) => {
       setNewName(event.target.value)

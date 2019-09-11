@@ -3,12 +3,16 @@ import { useState, useEffect } from "react";
 import loginService from "./services/login";
 import blogService from "./services/blogs";
 import Blog from "./components/Blog";
+import AddBlog from "./components/AddBlog";
+import ErrorNotification from "./components/errorNotification";
+import Notification from "./components/notification";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
   const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
@@ -25,6 +29,16 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  const blogAdded = newBlog => {
+    setBlogs(blogs.concat(newBlog));
+    setMessage(
+      "a new blog " + newBlog.title + " by " + newBlog.author + " added"
+    );
+    setTimeout(() => {
+      setMessage(null);
+    }, 6000);
+  };
 
   const handleLogout = () => {
     window.localStorage.clear();
@@ -54,7 +68,8 @@ const App = () => {
 
   const loginForm = () => (
     <div>
-      <h2>Login</h2>
+      <h2>Login to application</h2>
+      <ErrorNotification message={errorMessage} />
 
       <form onSubmit={handleLogin}>
         <div>
@@ -82,9 +97,12 @@ const App = () => {
 
   const blogsForm = () => (
     <div>
+      <Notification message={message}></Notification>
       <h2>Blogs</h2>
       <p>{user.username} logged in</p>
       <button onClick={handleLogout}>logout</button>
+
+      <AddBlog reload={blogAdded} />
       <div>
         {blogs.map(blog => (
           <Blog key={blog.id} blog={blog} />

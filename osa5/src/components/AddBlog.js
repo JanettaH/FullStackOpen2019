@@ -16,7 +16,7 @@ const AddBlog = ({ reload }) => {
       url: url
     };
 
-    blogService.addBlog(newBlog);
+    await blogService.addBlog(newBlog);
     reload(newBlog);
   };
 

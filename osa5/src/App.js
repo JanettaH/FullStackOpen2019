@@ -6,6 +6,7 @@ import Blog from "./components/Blog";
 import AddBlog from "./components/AddBlog";
 import ErrorNotification from "./components/errorNotification";
 import Notification from "./components/notification";
+import Togglable from "./components/togglable";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -31,15 +32,16 @@ const App = () => {
   }, []);
 
   const blogAdded = newBlog => {
-    setBlogs(blogs.concat(newBlog));
-    setMessage(
-      "a new blog " + newBlog.title + " by " + newBlog.author + " added"
-    );
-    setTimeout(() => {
-      setMessage(null);
-    }, 6000);
+    blogService.getAll().then(initialBlogs => {
+      setBlogs(initialBlogs);
+      setMessage(
+        "a new blog " + newBlog.title + " by " + newBlog.author + " added"
+      );
+      setTimeout(() => {
+        setMessage(null);
+      }, 6000);
+    });
   };
-
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
@@ -101,8 +103,9 @@ const App = () => {
       <h2>Blogs</h2>
       <p>{user.username} logged in</p>
       <button onClick={handleLogout}>logout</button>
-
-      <AddBlog reload={blogAdded} />
+      <Togglable buttonLabel="new blog">
+        <AddBlog reload={blogAdded} />
+      </Togglable>
       <div>
         {blogs.map(blog => (
           <Blog key={blog.id} blog={blog} />

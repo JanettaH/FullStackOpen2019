@@ -8,7 +8,7 @@ import ErrorNotification from "./components/errorNotification";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
 
-const App = () => {
+const App = React.forwardRef((props, ref) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -42,6 +42,17 @@ const App = () => {
       }, 6000);
     });
   };
+
+  const deleteBlog = () => {
+    blogService.getAll().then(initialBlogs => {
+      setBlogs(initialBlogs);
+      setMessage("Blog deleted");
+      setTimeout(() => {
+        setMessage(null);
+      }, 6000);
+    });
+  };
+
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
@@ -107,14 +118,21 @@ const App = () => {
         <AddBlog reload={blogAdded} />
       </Togglable>
       <div>
-        {blogs.map(blog => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map(blog => (
+            <Blog
+              deleteBlo={deleteBlog}
+              key={blog.id}
+              blog={blog}
+              user={user}
+            />
+          ))}
       </div>
     </div>
   );
 
   return <div>{user === null ? loginForm() : blogsForm()}</div>;
-};
+});
 
 export default App;

@@ -21,4 +21,5 @@ const ErrorNotification = ({ message }) => {
     </div>
   );
 };
+
 export default ErrorNotification;

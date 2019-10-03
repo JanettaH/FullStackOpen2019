@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const AddBlog = ({ reload }) => {
   const [title, setTitle] = useState("");
@@ -19,7 +20,6 @@ const AddBlog = ({ reload }) => {
     await blogService.addBlog(newBlog);
     reload(newBlog);
   };
-
   return (
     <div>
       <h2>Create new blog</h2>
@@ -61,5 +61,9 @@ const AddBlog = ({ reload }) => {
       </form>
     </div>
   );
+};
+
+AddBlog.propTypes = {
+  reload: PropTypes.func.isRequired
 };
 export default AddBlog;

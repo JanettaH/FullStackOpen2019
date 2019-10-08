@@ -8,7 +8,7 @@ import ErrorNotification from "./components/errorNotification";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
 
-const App = React.forwardRef((props, ref) => {
+const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -23,7 +23,7 @@ const App = React.forwardRef((props, ref) => {
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
@@ -80,7 +80,7 @@ const App = React.forwardRef((props, ref) => {
   };
 
   const loginForm = () => (
-    <div>
+    <div className="loginForm">
       <h2>Login to application</h2>
       <ErrorNotification message={errorMessage} />
 
@@ -109,7 +109,7 @@ const App = React.forwardRef((props, ref) => {
   );
 
   const blogsForm = () => (
-    <div>
+    <div className="blogsform">
       <Notification message={message}></Notification>
       <h2>Blogs</h2>
       <p>{user.username} logged in</p>
@@ -122,6 +122,7 @@ const App = React.forwardRef((props, ref) => {
           .sort((a, b) => b.likes - a.likes)
           .map(blog => (
             <Blog
+              className="blogDiv"
               deleteBlo={deleteBlog}
               key={blog.id}
               blog={blog}
@@ -133,6 +134,6 @@ const App = React.forwardRef((props, ref) => {
   );
 
   return <div>{user === null ? loginForm() : blogsForm()}</div>;
-});
+};
 
 export default App;

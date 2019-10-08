@@ -38,7 +38,7 @@ const Blog = ({ blog, deleteBlo, user }) => {
     }
   };
   return (
-    <div style={blogStyle}>
+    <div className="blogDiv" style={blogStyle}>
       <div className="toggis" onClick={() => toggleDetails()}>
         {blog.title} {blog.author}{" "}
       </div>

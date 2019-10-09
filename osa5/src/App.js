@@ -7,10 +7,11 @@ import AddBlog from "./components/AddBlog";
 import ErrorNotification from "./components/errorNotification";
 import Notification from "./components/notification";
 import Togglable from "./components/togglable";
+import { useField } from "./hooks";
 
 const App = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const username = useField("text");
+  const password = useField("password");
   const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [message, setMessage] = useState(null);
@@ -60,22 +61,25 @@ const App = () => {
 
   const handleLogin = async event => {
     event.preventDefault();
+
     try {
       const user = await loginService.login({
-        username,
-        password
+        username: username.value,
+        password: password.value
       });
 
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
 
       setUser(user);
-      setUsername("");
-      setPassword("");
+      username.reset();
+      password.reset();
     } catch (error) {
       setErrorMessage("Invalid credentials");
       setTimeout(() => {
         setErrorMessage(null);
       }, 6000);
+      username.reset();
+      password.reset();
     }
   };
 
@@ -87,21 +91,11 @@ const App = () => {
       <form onSubmit={handleLogin}>
         <div>
           username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...username.inputFields()} />
         </div>
         <div>
           password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...password.inputFields()} />
         </div>
         <button type="submit">login</button>
       </form>

@@ -12,10 +12,11 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module"
   },
-  plugins: ["react", "jest"],
+  plugins: ["react", "jest", "react-hooks"],
   rules: {
     indent: ["error", 2],
     "linebreak-style": ["error", "windows"],
+    "react-hooks/rules-of-hooks": "error",
     quotes: ["error", "double"],
     semi: ["error", "always"],
     eqeqeq: "error",

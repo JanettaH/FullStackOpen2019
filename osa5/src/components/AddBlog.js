@@ -1,24 +1,27 @@
 import React from "react";
-import { useState } from "react";
 import blogService from "../services/blogs";
 import PropTypes from "prop-types";
+import { useField } from "../hooks";
 
 const AddBlog = ({ reload }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
 
   const handleCreate = async event => {
     event.preventDefault();
 
     let newBlog = {
-      title: title,
-      author: author,
-      url: url
+      title: title.value,
+      author: author.value,
+      url: url.value
     };
 
     await blogService.addBlog(newBlog);
     reload(newBlog);
+    title.reset();
+    author.reset();
+    url.reset();
   };
   return (
     <div>
@@ -26,33 +29,18 @@ const AddBlog = ({ reload }) => {
 
       <form onSubmit={handleCreate}>
         <div>
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            placeholder="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
+          <p>Title</p>
+          <input {...title.inputFields()} />
         </div>
         <br></br>
         <div>
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            placeholder="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
+          <p>Author</p>
+          <input {...author.inputFields()} />
         </div>
         <br></br>
         <div>
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            placeholder="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
+          <p>Url</p>
+          <input {...url.inputFields()} />
         </div>
         <br></br>
         <button type="submit">create</button>

@@ -32,7 +32,7 @@ const Authors = props => {
         </tbody>
       </table>
       <div>
-        <Birthyear />
+        <Birthyear authors={authors} />
       </div>
     </div>
   );

@@ -1,21 +1,34 @@
 import React, { useState } from "react";
 import { EDIT_BIRTHYEAR, ALL_AUTHORS } from "../quaries";
 import { useMutation } from "@apollo/react-hooks";
+import Select from "react-select";
 
-const Birthyear = () => {
-  const [name, setName] = useState("");
+const Birthyear = ({ authors }) => {
+  const [option, setOption] = useState(null);
   const [born, setBorn] = useState("");
+
+  const options = [];
+  authors.forEach(author => {
+    options.push({
+      value: author.name,
+      label: author.name
+    });
+  });
 
   const [editBirthyear] = useMutation(EDIT_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   });
 
+  const handleChange = option => {
+    setOption(option);
+  };
+
   const submit = async e => {
     e.preventDefault();
     await editBirthyear({
-      variables: { name, setBornTo: parseInt(born) }
+      variables: { name: option.value, setBornTo: parseInt(born) }
     });
-    setName("");
+    setOption("");
     setBorn("");
   };
 
@@ -23,8 +36,7 @@ const Birthyear = () => {
     <div>
       <h2>Set birthyear</h2>
       <form onSubmit={submit}>
-        name
-        <input value={name} onChange={({ target }) => setName(target.value)} />
+        <Select value={option} options={options} onChange={handleChange} />
         <br />
         born
         <input value={born} onChange={({ target }) => setBorn(target.value)} />

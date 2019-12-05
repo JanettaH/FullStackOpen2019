@@ -77,9 +77,20 @@ const resolvers = {
       return context.currentUser;
     }
   },
+  Book: {
+    author: async root => {
+      let author = await Author.findById(root.author);
+      return {
+        name: author.name,
+        born: author.born,
+        id: author._id
+      };
+    }
+  },
   Author: {
-    bookCount: root => {
-      return books.filter(book => book.author === root.name).length;
+    bookCount: async root => {
+      let bookCount = await Book.countDocuments({ author: root._id });
+      return bookCount;
     }
   },
   Mutation: {
@@ -94,19 +105,21 @@ const resolvers = {
         published: args.published,
         geners: args.geners
       });
-      const author = await Author.findOne({ name: args.author });
+      let author = await Author.findOne({ name: args.author });
       if (!author) {
-        const author = new Author({
+        author = new Author({
           name: args.author
         });
         try {
-          await author.save();
+          author = await author.save();
         } catch (error) {
           throw new UserInputError(error.message, {
             invalidArgs: args
           });
         }
       }
+
+      book.author = author._id;
       try {
         await book.save();
       } catch (error) {

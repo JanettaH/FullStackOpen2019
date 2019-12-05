@@ -6,6 +6,7 @@ import Birthyear from "./Birthyear";
 const Authors = props => {
   const { data, loading } = useQuery(ALL_AUTHORS);
   const authors = data.allAuthors;
+  console.log(authors);
   if (!props.show) {
     return null;
   } else if (loading) {

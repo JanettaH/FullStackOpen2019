@@ -70,11 +70,14 @@ const resolvers = {
     allBooks: (root, args) => {
       return Book.find({});
     },
-    allAuthors: () => {
-      return Author.find({});
-    },
     me: (root, args, context) => {
       return context.currentUser;
+    },
+    allAuthors: async () => {
+      console.log("allauthors");
+      let authors = await Author.find({});
+      console.log(authors);
+      return authors;
     }
   },
   Book: {
@@ -131,7 +134,7 @@ const resolvers = {
     },
     editAuthor: async (root, args, context) => {
       const currentUser = context.currentUser;
-
+      console.log(currentUser);
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
@@ -180,6 +183,7 @@ const server = new ApolloServer({
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
       const decodedToken = jwt.verify(auth.substring(7), config.JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);
+      console.log(currentUser);
       return { currentUser };
     }
   }

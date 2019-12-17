@@ -32,6 +32,22 @@ export const ALL_BOOKS = gql`
   }
 `;
 
+export const LOG_IN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`;
+
+export const ME = gql`
+  {
+    me {
+      username
+    }
+  }
+`;
+
 export const CREATE_BOOK = gql`
   mutation createBook(
     $title: String!

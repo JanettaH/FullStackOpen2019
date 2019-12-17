@@ -4,9 +4,13 @@ import { ALL_AUTHORS } from "../quaries";
 import Birthyear from "./Birthyear";
 
 const Authors = props => {
-  const { data, loading } = useQuery(ALL_AUTHORS);
-  const authors = data.allAuthors;
+  const { data, loading, error } = useQuery(ALL_AUTHORS);
+
+  console.log(data);
+  const authors = data;
   console.log(authors);
+  console.log(error);
+
   if (!props.show) {
     return null;
   } else if (loading) {

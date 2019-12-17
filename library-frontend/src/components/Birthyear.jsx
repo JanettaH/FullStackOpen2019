@@ -25,6 +25,7 @@ const Birthyear = ({ authors }) => {
 
   const submit = async e => {
     e.preventDefault();
+
     await editBirthyear({
       variables: { name: option.value, setBornTo: parseInt(born) }
     });

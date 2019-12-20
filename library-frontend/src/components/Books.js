@@ -1,6 +1,8 @@
 import React from "react";
-import { ALL_BOOKS } from "../quaries";
+
 import { useQuery } from "@apollo/react-hooks";
+
+import { ALL_BOOKS } from "../quaries";
 
 const Books = props => {
   const { data, loading } = useQuery(ALL_BOOKS);
@@ -9,7 +11,7 @@ const Books = props => {
   if (!props.show) {
     return null;
   } else if (loading) {
-    return <p>loading..</p>;
+    return <p>loading</p>;
   }
 
   return (

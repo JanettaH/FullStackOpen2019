@@ -1,12 +1,13 @@
-const { ApolloServer, gql, UserInputError } = require("apollo-server");
+const { ApolloServer, UserInputError, gql } = require("apollo-server");
 const uuid = require("uuid/v1");
-const config = require("./utils/config");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 const Book = require("./models/book");
 const Author = require("./models/author");
 const User = require("./models/user");
+
+const config = require("./utils/config");
 
 const mongoUrl = config.MONGODB_URI;
 mongoose.connect(mongoUrl, {
@@ -21,21 +22,20 @@ const typeDefs = gql`
     title: String!
     published: Int!
     author: Author!
-    genres: [String!]!
     id: ID!
+    genres: [String!]
   }
   type Author {
     name: String!
     id: ID!
-    born: Int
-    bookCount: Int!
+    born: String
+    bookCount: Int
   }
   type User {
     username: String!
     favoriteGenre: String!
     id: ID!
   }
-
   type Token {
     value: String!
   }
@@ -52,7 +52,7 @@ const typeDefs = gql`
       title: String!
       author: String
       published: Int!
-      genres: [String]!
+      genres: [String]
     ): Book
     editAuthor(name: String!, setBornTo: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
@@ -63,23 +63,23 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => {
-      return "world";
+      return "world3324324";
     },
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
+      console.log("testi book");
       return Book.find({});
+    },
+    allAuthors: () => {
+      console.log("testi auth");
+      return Author.find({});
     },
     me: (root, args, context) => {
       return context.currentUser;
-    },
-    allAuthors: async () => {
-      console.log("allauthors");
-      let authors = await Author.find({});
-      console.log(authors);
-      return authors;
     }
   },
+
   Book: {
     author: async root => {
       let author = await Author.findById(root.author);
@@ -90,6 +90,7 @@ const resolvers = {
       };
     }
   },
+
   Author: {
     bookCount: async root => {
       let bookCount = await Book.countDocuments({ author: root._id });
@@ -103,16 +104,18 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
+
       const book = new Book({
         title: args.title,
         published: args.published,
-        geners: args.geners
+        genres: args.genres
       });
       let author = await Author.findOne({ name: args.author });
       if (!author) {
         author = new Author({
           name: args.author
         });
+
         try {
           author = await author.save();
         } catch (error) {
@@ -123,6 +126,7 @@ const resolvers = {
       }
 
       book.author = author._id;
+
       try {
         await book.save();
       } catch (error) {
@@ -130,11 +134,12 @@ const resolvers = {
           invalidArgs: args
         });
       }
+
       return book;
     },
     editAuthor: async (root, args, context) => {
       const currentUser = context.currentUser;
-      console.log(currentUser);
+
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
@@ -143,8 +148,9 @@ const resolvers = {
         author.name = args.name;
         author.born = args.setBornTo;
         return author.save();
+      } else {
+        return null;
       }
-      return null;
     },
     createUser: (root, args) => {
       const user = new User({
@@ -183,7 +189,6 @@ const server = new ApolloServer({
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
       const decodedToken = jwt.verify(auth.substring(7), config.JWT_SECRET);
       const currentUser = await User.findById(decodedToken.id);
-      console.log(currentUser);
       return { currentUser };
     }
   }

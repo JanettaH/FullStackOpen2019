@@ -1,25 +1,22 @@
 import React from "react";
+
 import { useQuery } from "@apollo/react-hooks";
+
 import { ALL_AUTHORS } from "../quaries";
 import Birthyear from "./Birthyear";
 
 const Authors = props => {
-  const { data, loading, error } = useQuery(ALL_AUTHORS);
-
-  console.log(data);
-  const authors = data;
-  console.log(authors);
-  console.log(error);
+  const { loading, data } = useQuery(ALL_AUTHORS);
+  const authors = data.allAuthors;
 
   if (!props.show) {
     return null;
   } else if (loading) {
-    return <p>loading...</p>;
+    return <p>loading</p>;
   }
-
   return (
     <div>
-      <h2>Authors</h2>
+      <h2>authors</h2>
       <table>
         <tbody>
           <tr>
@@ -36,9 +33,12 @@ const Authors = props => {
           ))}
         </tbody>
       </table>
-      <div>
-        <Birthyear authors={authors} />
-      </div>
+
+      {props.token != null ? (
+        <Birthyear authors={authors}></Birthyear>
+      ) : (
+        <p> Log in to edit authors. </p>
+      )}
     </div>
   );
 };

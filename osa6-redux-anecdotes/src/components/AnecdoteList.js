@@ -10,7 +10,12 @@ const AnecdoteList = props => {
 
   const vote = anecdote => () => {
     props.store.dispatch(voteAnecdote(anecdote.id));
-    props.store.dispatch(showNotification(anecdote.content));
+    props.store.dispatch(
+      showNotification("You voted '" + anecdote.content + "'")
+    );
+    setTimeout(() => {
+      props.store.dispatch(showNotification(""));
+    }, 5000);
   };
   return (
     <div>

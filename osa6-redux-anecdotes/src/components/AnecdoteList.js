@@ -1,4 +1,6 @@
 import React from "react";
+import { showNotification } from "../reducers/notificationReducer";
+import voteAnecdote from "../reducers/anecdoteReducer";
 
 const AnecdoteList = props => {
   const anecdotes = props.store.getState().anecdotes;
@@ -6,8 +8,9 @@ const AnecdoteList = props => {
     return b.votes - a.votes;
   });
 
-  const vote = id => {
-    props.store.dispatch({ type: "VOTE", id });
+  const vote = anecdote => () => {
+    props.store.dispatch(voteAnecdote(anecdote.id));
+    props.store.dispatch(showNotification(anecdote.content));
   };
   return (
     <div>
@@ -16,7 +19,7 @@ const AnecdoteList = props => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}

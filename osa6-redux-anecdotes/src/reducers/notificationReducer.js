@@ -1,18 +1,18 @@
-const initialState = "Tämä on notification";
+const initialState = "default";
 
 const notificationReducer = (state = initialState, action) => {
   switch (action.type) {
     case "SET_NOTIFICATION":
-      return action.notification;
+      return action.notification.text;
     default:
       return state;
   }
 };
 
-export const notificataionChange = notification => {
+export const showNotification = text => {
   return {
     type: "SET_NOTIFICATION",
-    data: { notification }
+    notification: { text }
   };
 };
 

@@ -21,6 +21,8 @@ const initialState = anecdotesAtStart.map(asObject);
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "NEW_ANECDOTE":
+      return [...state, action.data];
     case "VOTE":
       const id = action.id;
       const anecdoteToChange = state.find(a => a.id === id);
@@ -32,8 +34,6 @@ const reducer = (state = initialState, action) => {
       return state.map(anecdote =>
         anecdote.id !== id ? anecdote : changedAnecdote
       );
-    case "NEW_ANECDOTE":
-      return [...state, action.data];
     default:
       return state;
   }
@@ -42,6 +42,13 @@ const reducer = (state = initialState, action) => {
 export const createAnecdote = porps => {
   return {
     type: "NEW_ANECDOTE"
+  };
+};
+
+export const voteAnecdote = anecdote => {
+  return {
+    type: "VOTE",
+    data: anecdote.id
   };
 };
 

@@ -24,7 +24,7 @@ const reducer = (state = initialState, action) => {
     case "NEW_ANECDOTE":
       return [...state, action.data];
     case "VOTE":
-      const id = action.id;
+      const id = action.data;
       const anecdoteToChange = state.find(a => a.id === id);
       const changedAnecdote = {
         ...anecdoteToChange,
@@ -48,7 +48,7 @@ export const createAnecdote = porps => {
 export const voteAnecdote = anecdote => {
   return {
     type: "VOTE",
-    data: anecdote.id
+    data: anecdote
   };
 };
 

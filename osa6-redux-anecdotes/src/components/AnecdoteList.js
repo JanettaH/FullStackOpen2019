@@ -1,6 +1,6 @@
 import React from "react";
 import { showNotification } from "../reducers/notificationReducer";
-import voteAnecdote from "../reducers/anecdoteReducer";
+import { voteAnecdote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = props => {
   const anecdotes = props.store.getState().anecdotes;

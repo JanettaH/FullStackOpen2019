@@ -3,7 +3,6 @@ import { createAnecdote } from "../reducers/anecdoteReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
 const AnecdoteForm = props => {
-  const generateId = () => Number((Math.random() * 1000000).toFixed(0));
   const addAnecdote = event => {
     event.preventDefault();
     const content = event.target.anecdote.value;
@@ -17,7 +16,7 @@ const AnecdoteForm = props => {
 
   return (
     <div>
-      <h2>create new</h2>
+      <h2>Create new anecdote</h2>
       <form onSubmit={addAnecdote}>
         <input name="anecdote" />
         <button type="submit">create</button>

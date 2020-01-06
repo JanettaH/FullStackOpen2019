@@ -3,7 +3,7 @@ import { showNotification } from "../reducers/notificationReducer";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
 
 const AnecdoteList = props => {
-  const anecdotes = props.store.getState().anecdotes;
+  const { anecdotes, filter } = props.store.getState();
   const sortedAnecdotes = anecdotes.sort(function(a, b) {
     return b.votes - a.votes;
   });
@@ -19,15 +19,19 @@ const AnecdoteList = props => {
   };
   return (
     <div>
-      {sortedAnecdotes.map(anecdote => (
-        <div key={anecdote.id}>
-          <div>{anecdote.content}</div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={vote(anecdote)}>vote</button>
+      <br />
+      {sortedAnecdotes
+        .filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
+        .map(anecdote => (
+          <div key={anecdote.id}>
+            <div>{anecdote.content}</div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={vote(anecdote)}>Vote</button>
+            </div>
+            <br />
           </div>
-        </div>
-      ))}
+        ))}
     </div>
   );
 };

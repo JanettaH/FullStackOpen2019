@@ -28,7 +28,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
-      blogService.setToken(user.token);
     }
   }, []);
 
@@ -69,7 +68,7 @@ const App = () => {
       });
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-
+      blogService.setToken(user.token);
       setUser(user);
       username.reset();
       password.reset();

@@ -56,6 +56,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
+    blogService.setToken(null);
   };
 
   const handleLogin = async event => {

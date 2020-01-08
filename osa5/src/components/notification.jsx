@@ -1,4 +1,5 @@
 import React from "react";
+import { Alert } from "react-bootstrap";
 
 const styles = {
   color: "green",
@@ -15,10 +16,6 @@ const Notification = ({ message }) => {
     return null;
   }
 
-  return (
-    <div className="message" style={styles}>
-      {message}
-    </div>
-  );
+  return <div>{message && <Alert variant="success">{message}</Alert>}</div>;
 };
 export default Notification;

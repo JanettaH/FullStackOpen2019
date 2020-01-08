@@ -30,17 +30,17 @@ const AddBlog = ({ reload }) => {
       <form onSubmit={handleCreate}>
         <div>
           <p>Title</p>
-          <input {...title.inputFields()} />
+          <input id="title" {...title.inputFields()} />
         </div>
         <br></br>
         <div>
           <p>Author</p>
-          <input {...author.inputFields()} />
+          <input id="author" {...author.inputFields()} />
         </div>
         <br></br>
         <div>
           <p>Url</p>
-          <input {...url.inputFields()} />
+          <input id="url" {...url.inputFields()} />
         </div>
         <br></br>
         <button type="submit">create</button>

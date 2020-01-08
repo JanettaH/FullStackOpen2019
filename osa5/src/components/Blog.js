@@ -1,8 +1,11 @@
 import React from "react";
-import { useState } from "react";
 import blogService from "../services/blogs";
+import userService from "../services/user";
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
-const Blog = ({ blog, deleteBlo, user }) => {
+const Blog = ({ blog, user }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,53 +14,17 @@ const Blog = ({ blog, deleteBlo, user }) => {
     marginBottom: 5
   };
 
-  const [showDetails, setShowDetails] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
-
-  const toggleDetails = () => {
-    setShowDetails(!showDetails);
-  };
-
-  const like = async () => {
-    const updateBlog = {
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-      likes: likes + 1,
-      id: blog.id
-    };
-    await blogService.updateBlog(updateBlog);
-    setLikes(likes + 1);
-  };
-
-  const deleteBlog = async () => {
-    let confirmed = window.confirm("remove blog " + blog.title + "?");
-    if (confirmed === true) {
-      await blogService.deleteBlog(blog.id);
-      deleteBlo();
-    }
-  };
   return (
     <div className="blogDiv" style={blogStyle}>
-      <div className="toggis" onClick={() => toggleDetails()}>
-        {blog.title} {blog.author}{" "}
+      <div className="toggis">
+        <Table striped>
+          <tbody>
+            <Link to={"/blogs/" + blog.id}>
+              {blog.title} {blog.author}{" "}
+            </Link>
+          </tbody>
+        </Table>
       </div>
-      {showDetails ? (
-        <div>
-          <p>{blog.url}</p>
-          <p>
-            {likes} likes <button onClick={like}>like</button>
-          </p>
-          <p>added by {blog.user.name}</p>
-          {blog.user.id === user.id ? (
-            <button onClick={deleteBlog}>remove</button>
-          ) : (
-            <p>You are not the owner of this blog</p>
-          )}
-        </div>
-      ) : (
-        <div></div>
-      )}
     </div>
   );
 };

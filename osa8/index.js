@@ -68,11 +68,9 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: (root, args) => {
-      console.log("testi book");
       return Book.find({});
     },
     allAuthors: () => {
-      console.log("testi auth");
       return Author.find({});
     },
     me: (root, args, context) => {

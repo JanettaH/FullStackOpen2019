@@ -8,7 +8,7 @@ const Birthyear = ({ authors }) => {
   const [born, setBorn] = useState("");
 
   const options = [];
-  authors.forEach(author => {
+  authors.allAuthors.forEach(author => {
     options.push({
       value: author.name,
       label: author.name

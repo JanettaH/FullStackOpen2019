@@ -14,7 +14,6 @@ const NewBook = props => {
   });
 
   const token = window.localStorage.getItem("loggedLibraryAppUser");
-
   if (token === "" || token === null) {
     return <div> </div>;
   }

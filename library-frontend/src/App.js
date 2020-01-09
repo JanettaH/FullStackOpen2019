@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedLibraryAppUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
+      const user = loggedUserJSON;
       setToken(user);
     }
   }, []);
@@ -51,7 +51,7 @@ const App = () => {
         )}
       </div>
 
-      <Authors show={page === "authors"} />
+      <Authors token={token} show={page === "authors"} />
 
       <Books show={page === "books"} />
 
@@ -61,7 +61,6 @@ const App = () => {
         show={page === "login"}
         setBooksPage={setBooksPage}
       />
-      <p>{token}</p>
     </div>
   );
 };

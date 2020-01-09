@@ -4,11 +4,20 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
 import Recommend from "./components/Recommend";
+import { useSubscription } from "@apollo/react-hooks";
+import { BOOK_ADDED } from "./quaries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
 
   const [token, setToken] = useState("");
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(subscriptionData.data.bookAdded.title + " lisätty");
+      console.log(subscriptionData);
+    }
+  });
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedLibraryAppUser");

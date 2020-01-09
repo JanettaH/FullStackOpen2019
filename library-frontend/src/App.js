@@ -3,6 +3,7 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Login from "./components/Login";
+import Recommend from "./components/Recommend";
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -38,6 +39,14 @@ const App = () => {
         <button onClick={() => setPage("books")}>books</button>
         {token === "" || token === null ? (
           <button type="button" disabled>
+            recommend
+          </button>
+        ) : (
+          <button onClick={() => setPage("recommend")}>recommend</button>
+        )}
+
+        {token === "" || token === null ? (
+          <button type="button" disabled>
             add book
           </button>
         ) : (
@@ -56,6 +65,7 @@ const App = () => {
       <Books show={page === "books"} />
 
       <NewBook show={page === "add"} />
+      <Recommend show={page === "recommend"} />
       <Login
         appCallback={callbackFunction}
         show={page === "login"}
